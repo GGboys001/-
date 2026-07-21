@@ -18,6 +18,28 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
+    // 新增签名配置
+    signingConfigs {
+        create("release") {
+            storeFile = file(project.findProperty("storeFile") as String)
+            storePassword = project.findProperty("storePassword") as String
+            keyAlias = project.findProperty("keyAlias") as String
+            keyPassword = project.findProperty("keyPassword") as String
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled = true
+            shrinkResources = true
+            signingConfig = signingConfigs.getByName("release")
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
+        }
+    }
+
     buildFeatures { compose = true; buildConfig = true }
     packaging { resources { excludes += "/META-INF/{AL2.0,LGPL2.1}" } }
 }
